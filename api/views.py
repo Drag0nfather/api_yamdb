@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework import viewsets
 
-# Create your views here.
+from .models import Title
+
+# TODO: GenreViewSet, UserViewSet, CategoryViewSet, ReviewViewSet, CommemntViewSet
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.all()
