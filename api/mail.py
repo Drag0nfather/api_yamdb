@@ -1,5 +1,8 @@
+from random import random
+
+
 def generate_confirm_code():
-    pass
+    return random.randint(100000, 999999)
 
 
 def send_mail_func():
