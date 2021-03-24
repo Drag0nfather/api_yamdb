@@ -1,7 +1,6 @@
 from django.db import models
 
 
-# TODO: Commemnts
 class Categories(models.Model):
     search = models.CharField(
         max_length=50,
@@ -60,33 +59,34 @@ class Title(models.Model):
         # ordering = ['-pub_date']
 
 
-class Reviews(models.Model):
-    title_id = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        verbose_name='Отзывы',
-        help_text='Отзывы к тайтлу',
-    )
+# class Reviews(models.Model):
+#     title_id = models.ForeignKey(
+#         Title,
+#         on_delete=models.CASCADE,
+#         verbose_name='Отзывы',
+#         help_text='Отзывы к тайтлу',
+#         related_name='Title'
+#     )
 
-    class Meta:
-        verbose_name = 'Reviews'
-        verbose_name_plural = 'Reviews'
-        # ordering = ['-pub_date']
+#     class Meta:
+#         verbose_name = 'Reviews'
+#         verbose_name_plural = 'Reviews'
+#         # ordering = ['-pub_date']
 
 
-class Comments(models.Model):
-    title_id = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        verbose_name='Комментарии',
-        help_text='Комментарии к тайтлу',
-    )
-    review_id = models.ForeignKey(
-        Reviews,
-        on_delete=models.CASCADE,
-        verbose_name='Отзывы',
-        help_text='Отзывы к тайтлу',
-    )
-    class Meta:
-        verbose_name = 'Comments'
-        verbose_name_plural = 'Comments'
+# class Comments(models.Model):
+#     title_id = models.ForeignKey(
+#         Title,
+#         on_delete=models.CASCADE,
+#         verbose_name='Комментарии',
+#         help_text='Комментарии к тайтлу',
+#     )
+#     review_id = models.ForeignKey(
+#         Reviews,
+#         on_delete=models.CASCADE,
+#         verbose_name='Отзывы',
+#         help_text='Отзывы к тайтлу',
+#     )
+#     class Meta:
+#         verbose_name = 'Comments'
+#         verbose_name_plural = 'Comments'
