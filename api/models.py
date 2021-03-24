@@ -19,3 +19,11 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username',)
+
+    @property
+    def is_admin(self):
+        return self.is_staff or self.role == Roles.ADMIN
+
+    @property
+    def is_moderator(self):
+        return self.role == Roles.MODERATOR
