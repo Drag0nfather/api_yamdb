@@ -3,7 +3,7 @@ from rest_framework.validators import UniqueTogetherValidator, ValidationError
 
 from django.contrib.auth import get_user_model
 
-from .models import *
+from .models import Categories, Genres, Title
 
 User = get_user_model()
 
@@ -33,19 +33,3 @@ class TitleSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Title
-
-
-# class ReviewsSerializer(serializers.ModelSerializer):
-#     search = serializers.CharField()
-
-#     class Meta:
-#         fields = '__all__'
-#         model = Reviews
-
-
-# class CommentsSerializer(serializers.ModelSerializer):
-#     search = serializers.CharField()
-
-#     class Meta:
-#         fields = '__all__'
-#         model = Comments
