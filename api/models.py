@@ -1,4 +1,7 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from api.mail import generate_confirm_code
 
 
 class Categories(models.Model):
@@ -12,7 +15,6 @@ class Categories(models.Model):
     class Meta:
         verbose_name = 'Categories'
         verbose_name_plural = 'Categories'
-        # ordering = ['-pub_date']
 
 
 class Genres(models.Model):
@@ -26,7 +28,6 @@ class Genres(models.Model):
     class Meta:
         verbose_name = 'Genres'
         verbose_name_plural = 'Genres'
-        # ordering = ['-pub_date']
 
 
 class Title(models.Model):
@@ -56,37 +57,34 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Title'
         verbose_name_plural = 'Title'
-        # ordering = ['-pub_date']
 
 
-# class Reviews(models.Model):
-#     title_id = models.ForeignKey(
-#         Title,
-#         on_delete=models.CASCADE,
-#         verbose_name='Отзывы',
-#         help_text='Отзывы к тайтлу',
-#         related_name='Title'
-#     )
-
-#     class Meta:
-#         verbose_name = 'Reviews'
-#         verbose_name_plural = 'Reviews'
-#         # ordering = ['-pub_date']
+class Roles(models.TextChoices):
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
 
 
-# class Comments(models.Model):
-#     title_id = models.ForeignKey(
-#         Title,
-#         on_delete=models.CASCADE,
-#         verbose_name='Комментарии',
-#         help_text='Комментарии к тайтлу',
-#     )
-#     review_id = models.ForeignKey(
-#         Reviews,
-#         on_delete=models.CASCADE,
-#         verbose_name='Отзывы',
-#         help_text='Отзывы к тайтлу',
-#     )
-#     class Meta:
-#         verbose_name = 'Comments'
-#         verbose_name_plural = 'Comments'
+class User(AbstractUser):
+
+    class Meta:
+        ordering = ['-id']
+
+    username = models.CharField(max_length=30, unique=True,
+                                blank=False, null=False)
+    bio = models.CharField(max_length=4000, null=True)
+    email = models.EmailField(max_length=255, unique=True,
+                              blank=False, null=False)
+    role = models.CharField(max_length=50, choices=Roles.choices)
+    confirmation_code = models.CharField(max_length=6, null=True, default=generate_confirm_code)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ('username',)
+
+    @property
+    def is_admin(self):
+        return self.is_staff or self.role == Roles.ADMIN
+
+    @property
+    def is_moderator(self):
+        return self.role == Roles.MODERATOR
