@@ -9,3 +9,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'username',
                   'bio', 'email', 'role', 'confirmation_code')
         model = User
+
+
+class ConfirmationCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+
+class CheckConfirmationCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    confirmation_code = serializers.CharField(required=True)
