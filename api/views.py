@@ -4,6 +4,7 @@ from api.models import Title, Genres, Categoriesm User
 from api.permissions import IsAdminPermission
 
 from django.contrib.auth.hashers import make_password, check_password
+from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import render, get_object_or_404
 from django_filters import filters
 from django.db.models import Max
@@ -11,13 +12,13 @@ from django.db.models import Max
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.pagination import BasePagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
 BASE_USERNAME = 'User'
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -94,3 +95,30 @@ class GenresViewSet(viewsets.ModelViewSet):
 class CategoriesViewSet(viewsets.ModelViewSet):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    pagination_class = BasePagination
+    filter_backends = (DjangoFilterBackend,)
+    fiterser_fields = ('title',)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    pagination_class = BasePagination
+    filter_backends = (DjangoFilterBackend,)
+    fiterser_fields = ('review',)
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, review=review)
+
+    def get_queryset(self):
+        review_id = self.kwargs.get('review_id', '')
+        review = get_object_or_404(Review, pk=review_id)
+        return review.comments.all()
