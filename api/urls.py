@@ -1,11 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-
-from api.mail import get_token_func, send_mail_func
-from api.views import UserViewSet
+from api.views import UserViewSet, send_confirmation_code, get_token
 
 router = DefaultRouter()
-
 router.register('users', UserViewSet, basename='users')
 
 urlpatterns = [
@@ -13,6 +10,6 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('token/', get_token_func, name='get_token'),
-    path('email/', send_mail_func, name='get_verification_code'),
+    path('token/', get_token, name='get_token'),
+    path('email/', send_confirmation_code, name='get_verification_code'),
 ]
