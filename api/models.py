@@ -11,6 +11,10 @@ class Roles(models.TextChoices):
 
 
 class User(AbstractUser):
+
+    class Meta:
+        ordering = ['-id']
+
     username = models.CharField(max_length=30, unique=True,
                                 blank=False, null=False)
     bio = models.CharField(max_length=4000, null=True)
