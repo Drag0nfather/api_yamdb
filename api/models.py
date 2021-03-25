@@ -11,9 +11,11 @@ class Roles(models.TextChoices):
 
 
 class User(AbstractUser):
-    username = models.CharField(max_length=20, unique=True)
+    username = models.CharField(max_length=30, unique=True,
+                                blank=False, null=False)
     bio = models.CharField(max_length=4000, null=True)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(max_length=255, unique=True,
+                              blank=False, null=False)
     role = models.CharField(max_length=50, choices=Roles.choices)
     confirmation_code = models.CharField(max_length=6, null=True, default=generate_confirm_code)
 
