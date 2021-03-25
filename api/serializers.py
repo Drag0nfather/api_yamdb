@@ -9,7 +9,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = '__all__'
+        fields = ('text', 'author', 'score', 'pub_date')
         model = Review
 
 
@@ -19,5 +19,5 @@ class CommentSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = '__all__'
+        fields = ('text', 'author', 'pub_date')
         models = Comment
