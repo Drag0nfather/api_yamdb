@@ -15,10 +15,3 @@ def send_mail_func(email, confirmation_code):
         recipient_list=[email],
         fail_silently=False
     )
-
-
-def get_token_func():
-    pass
-
-
-

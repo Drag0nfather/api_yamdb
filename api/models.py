@@ -76,7 +76,11 @@ class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True,
                               blank=False, null=False)
     role = models.CharField(max_length=50, choices=Roles.choices)
-    confirmation_code = models.CharField(max_length=6, null=True, default=generate_confirm_code)
+    confirmation_code = models.CharField(
+        max_length=6,
+        null=True,
+        default=generate_confirm_code
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username',)
@@ -88,7 +92,7 @@ class User(AbstractUser):
     @property
     def is_moderator(self):
         return self.role == Roles.MODERATOR
-        
+
 
 class Review(models.Model):
     RATING_RANGE = (

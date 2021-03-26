@@ -1,24 +1,31 @@
-from api.serializers import TitleSerializer, GenresSerializer, CategoriesSerializer, UserSerializer, ConfirmationCodeSerializer, CheckConfirmationCodeSerializer
-from api.mail import generate_confirm_code, send_mail_func
-from api.models import Title, Genres, Categoriesm User
-from api.permissions import IsAdminPermission
-
 from django.contrib.auth.hashers import make_password, check_password
 from django_filters.rest_framework import DjangoFilterBackend
-from django.shortcuts import render, get_object_or_404
-from django_filters import filters
-from django.db.models import Max
+from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.pagination import BasePagination
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework import status
 
+from api.models import Title, Genres, Categories, User, Review
+from api.mail import generate_confirm_code, send_mail_func
+from api.permissions import IsAdminPermission
+from api.serializers import (
+    TitleSerializer,
+    GenresSerializer,
+    CategoriesSerializer,
+    UserSerializer,
+    ReviewSerializer,
+    CommentSerializer,
+    ConfirmationCodeSerializer,
+    CheckConfirmationCodeSerializer
+)
+
 BASE_USERNAME = 'User'
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -31,10 +38,17 @@ def send_confirmation_code(request):
         if not user:
             User.objects.create_user(email=email)
         User.objects.filter(email=email).update(
-            confirmation_code=make_password(confirmation_code, salt=None, hasher='default')
+            confirmation_code=make_password(
+                confirmation_code,
+                salt=None,
+                hasher='default'
+            )
         )
         send_mail_func(email=email, confirmation_code=confirmation_code)
-        return Response(f'Код отправлен на адрес {email}', status=status.HTTP_200_OK)
+        return Response(
+            f'Код отправлен на адрес {email}',
+            status=status.HTTP_200_OK
+        )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -54,7 +68,7 @@ def get_token(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = 'username'
@@ -86,7 +100,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer, *args, **kwargs):
         serializer.save()
 
-    
+
 class GenresViewSet(viewsets.ModelViewSet):
     queryset = Genres.objects.all()
     serializer_class = GenresSerializer
