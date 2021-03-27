@@ -11,6 +11,13 @@ class Categories(models.Model):
         verbose_name='Категории',
         help_text='Поиск по категории',
     )
+    name = models.CharField(
+        max_length=50,
+        blank=True, null=True,
+        verbose_name='Категории',
+        help_text='Поиск по категории',
+    )
+    slug = models.SlugField()
 
     class Meta:
         verbose_name = 'Categories'
@@ -24,6 +31,7 @@ class Genres(models.Model):
         verbose_name='Жанры',
         help_text='Поиск по жанрам',
     )
+    slug = models.SlugField()
 
     class Meta:
         verbose_name = 'Genres'
@@ -53,6 +61,13 @@ class Title(models.Model):
         verbose_name='Год',
         help_text='Год выпуска тайтла',
     )
+    description = models.CharField(
+        max_length=50,
+        blank=True, null=True,
+        verbose_name='Описание',
+        help_text='Описание тайтла',
+    )
+    titles_id = models.SlugField(unique=True)
 
     class Meta:
         verbose_name = 'Title'

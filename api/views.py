@@ -91,6 +91,10 @@ class UserViewSet(viewsets.ModelViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
+    permission_classes = (IsAdminPermission,)
+    pagination_class = BasePagination
+    filter_backends = (DjangoFilterBackend,)
+    fiterser_fields = ('title',)
 
     def get_queryset(self):
         title_id = self.kwargs.get('title_id')
@@ -104,11 +108,19 @@ class TitleViewSet(viewsets.ModelViewSet):
 class GenresViewSet(viewsets.ModelViewSet):
     queryset = Genres.objects.all()
     serializer_class = GenresSerializer
+    permission_classes = (IsAdminPermission,)
+    pagination_class = BasePagination
+    filter_backends = (DjangoFilterBackend,)
+    fiterser_fields = ('title',)
 
 
 class CategoriesViewSet(viewsets.ModelViewSet):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
+    permission_classes = (IsAdminPermission, AllowAny)
+    pagination_class = BasePagination
+    filter_backends = (DjangoFilterBackend,)
+    fiterser_fields = ('title',)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
