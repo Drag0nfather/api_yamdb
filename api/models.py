@@ -4,26 +4,18 @@ from django.db import models
 from api.mail import generate_confirm_code
 
 
-class Categories(models.Model):
-    search = models.CharField(
-        max_length=50,
-        blank=True, null=True,
-        verbose_name='Категории',
-        help_text='Поиск по категории',
-    )
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(unique=True)
 
     class Meta:
         verbose_name = 'Categories'
         verbose_name_plural = 'Categories'
 
 
-class Genres(models.Model):
-    search = models.CharField(
-        max_length=50,
-        blank=True, null=True,
-        verbose_name='Жанры',
-        help_text='Поиск по жанрам',
-    )
+class Genre(models.Model):
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(unique=True)
 
     class Meta:
         verbose_name = 'Genres'
@@ -31,17 +23,16 @@ class Genres(models.Model):
 
 
 class Title(models.Model):
-    category = models.CharField(
-        max_length=50,
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
         blank=True, null=True,
-        verbose_name='Категория',
-        help_text='Категория тайтла',
+        related_name='titles',
     )
-    genre = models.CharField(
-        max_length=50,
+    genre = models.ManyToManyField(
+        Genre,
         blank=True, null=True,
-        verbose_name='Жанр',
-        help_text='Жанр тайтла',
+        related_name='titles',
     )
     name = models.CharField(
         max_length=50,
@@ -53,6 +44,7 @@ class Title(models.Model):
         verbose_name='Год',
         help_text='Год выпуска тайтла',
     )
+    description = models.TextField()
 
     class Meta:
         verbose_name = 'Title'
@@ -108,13 +100,13 @@ class Review(models.Model):
         ('10', '10')
     )
     author = models.ForeignKey(
-        'User', on_delete=models.CASCADE, related_name='reviews'
+        User, on_delete=models.CASCADE, related_name='reviews'
     )
     pub_date = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(choices=RATING_RANGE)
     text = models.TextField(max_length=5000)
     title = models.ForeignKey(
-        'Title', on_delete=models.CASCADE, related_name='reviews'
+        Title, on_delete=models.CASCADE, related_name='reviews'
     )
 
     class Meta:
@@ -127,7 +119,7 @@ class Review(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(
-        'User', on_delete=models.CASCADE, related_name='comments'
+        User, on_delete=models.CASCADE, related_name='comments'
     )
     pub_date = models.DateTimeField(auto_now_add=True)
     review = models.ForeignKey(

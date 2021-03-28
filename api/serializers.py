@@ -2,25 +2,21 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 
-from api.models import Categories, Genres, Title, User, Review, Comment
+from api.models import Category, Genre, Title, User, Review, Comment
 
 User = get_user_model()
 
 
 class CategoriesSerializer(serializers.ModelSerializer):
-    search = serializers.CharField()
-
     class Meta:
-        fields = '__all__'
-        model = Categories
+        fields = ('name', 'slug')
+        model = Category
 
 
 class GenresSerializer(serializers.ModelSerializer):
-    search = serializers.CharField()
-
     class Meta:
         fields = '__all__'
-        model = Genres
+        model = Genre
 
 
 class TitleSerializer(serializers.ModelSerializer):
