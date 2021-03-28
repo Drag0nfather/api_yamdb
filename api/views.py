@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.pagination import BasePagination, PageNumberPagination
 from rest_framework.response import Response
-from rest_framework import mixins, viewsets, filters
+from rest_framework import mixins, serializers, viewsets, filters
 from rest_framework import status
 
 from api.models import Title, Genre, Category, User, Review
@@ -15,8 +15,8 @@ from api.mail import generate_confirm_code, send_mail_func
 from api.permissions import IsAdminPermission, IsAuthorOrStuffOrReadOnly, IsAdminOrReadOnlyPermission
 from api.serializers import (
     TitleSerializer,
-    GenresSerializer,
-    CategoriesSerializer,
+    GenreSerializer,
+    CategorySerializer,
     UserSerializer,
     ReviewSerializer,
     CommentSerializer,
@@ -93,6 +93,8 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnlyPermission,)
     pagination_class = PageNumberPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ('genre',)
 
     def perform_create(self, serializer):
         serializer.save()
@@ -103,7 +105,7 @@ class GenresViewSet(mixins.ListModelMixin,
                     mixins.DestroyModelMixin,
                     viewsets.GenericViewSet):
     queryset = Genre.objects.all()
-    serializer_class = GenresSerializer
+    serializer_class = GenreSerializer
     permission_classes = (IsAdminOrReadOnlyPermission,)
     pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter]
@@ -116,7 +118,7 @@ class CategoriesViewSet(mixins.ListModelMixin,
                         mixins.DestroyModelMixin,
                         viewsets.GenericViewSet):
     queryset = Category.objects.all()
-    serializer_class = CategoriesSerializer
+    serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnlyPermission,)
     pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter]

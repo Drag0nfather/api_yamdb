@@ -7,27 +7,31 @@ from api.models import Category, Genre, Title, User, Review, Comment
 User = get_user_model()
 
 
-class CategoriesSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('name', 'slug')
         model = Category
 
 
-class GenresSerializer(serializers.ModelSerializer):
+class GenreSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = '__all__'
+        fields = ('name', 'slug')
         model = Genre
 
 
+class GenreField(serializers.SlugRelatedField):
+    def to_representation(self, value):
+        return GenreSerializer(value).data
+
+
+class CategoryField(serializers.SlugRelatedField):
+    def to_representation(self, value):
+        return CategorySerializer(value).data
+
+
 class TitleSerializer(serializers.ModelSerializer):
-    genre = serializers.SlugRelatedField(
-        slug_field='slug',
-        many=True,
-        queryset=Genre.objects.all()
-    )
-    category = serializers.SlugRelatedField(
-        slug_field='slug', queryset=Category.objects.all()
-    )
+    genre = GenreField(many=True, slug_field='slug', queryset=Genre.objects.all())
+    category = CategoryField(slug_field='slug', queryset=Category.objects.all())
 
     class Meta:
         fields = '__all__'

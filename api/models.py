@@ -39,7 +39,7 @@ class Title(models.Model):
         verbose_name='Имя',
         help_text='Имя тайтла',
     )
-    year = models.DateField(
+    year = models.IntegerField(
         verbose_name='Год',
         help_text='Год выпуска тайтла',
     )
