@@ -129,18 +129,24 @@ class CategoriesViewSet(mixins.ListModelMixin,
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    pagination_class = BasePagination
+    pagination_class = PageNumberPagination
     permission_classes = (IsAuthorOrStuffOrReadOnly, IsAuthenticatedOrReadOnly)
     filter_backends = (DjangoFilterBackend,)
     fiterser_fields = ('title',)
 
+    def get_queryset(self):
+        title_id = self.kwargs.get('title_id', '')
+        title = get_object_or_404(Title, pk=title_id)
+        return title.reviews.all()
+
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(author=self.request.user,
+                        title_id=self.kwargs.get('title_id'))
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    pagination_class = BasePagination
+    pagination_class = PageNumberPagination
     permission_classes = (IsAuthorOrStuffOrReadOnly, IsAuthenticatedOrReadOnly)
     filter_backends = (DjangoFilterBackend,)
     fiterser_fields = ('review',)

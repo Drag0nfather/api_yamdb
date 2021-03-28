@@ -87,22 +87,22 @@ class User(AbstractUser):
 
 class Review(models.Model):
     RATING_RANGE = (
-        ('1', '1'),
-        ('2', '2'),
-        ('3', '3'),
-        ('4', '4'),
-        ('5', '5'),
-        ('6', '6'),
-        ('7', '7'),
-        ('8', '8'),
-        ('9', '9'),
-        ('10', '10')
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+        (6, 6),
+        (7, 7),
+        (8, 8),
+        (9, 9),
+        (10, 10)
     )
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='reviews'
     )
     pub_date = models.DateTimeField(auto_now_add=True)
-    score = models.IntegerField(choices=RATING_RANGE)
+    score = models.IntegerField()
     text = models.TextField(max_length=5000)
     title = models.ForeignKey(
         Title, on_delete=models.CASCADE, related_name='reviews'

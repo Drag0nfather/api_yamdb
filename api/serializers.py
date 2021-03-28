@@ -1,3 +1,4 @@
+from django.db.models import query
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
@@ -61,7 +62,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ('text', 'author', 'score', 'pub_date')
+        fields = ('id', 'text', 'author', 'score', 'pub_date')
         model = Review
 
 
@@ -71,5 +72,5 @@ class CommentSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ('text', 'author', 'pub_date')
-        models = Comment
+        fields = ('id', 'text', 'author', 'pub_date')
+        model = Comment
