@@ -91,13 +91,10 @@ class UserViewSet(viewsets.ModelViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
+    permission_classes = (IsAdminOrReadOnlyPermission,)
+    pagination_class = PageNumberPagination
 
-    def get_queryset(self):
-        title_id = self.kwargs.get('title_id')
-        title = get_object_or_404(Title, pk=title_id)
-        return title.name.all()
-
-    def perform_create(self, serializer, *args, **kwargs):
+    def perform_create(self, serializer):
         serializer.save()
 
 
