@@ -1,3 +1,4 @@
+from django.http import request
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
@@ -63,6 +64,14 @@ class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         slug_field='username', read_only=True
     )
+
+    def validate(self, data):
+        user = self.context['request'].user
+        title = self.context['view'].kwargs.get('title_id')
+        if (self.context['request'].method == 'POST'
+           and Review.objects.filter(author=user, title=title).exists()):
+            raise serializers.ValidationError('Вы уже оставили отзыв.')
+        return data
 
     class Meta:
         fields = ('id', 'text', 'author', 'score', 'pub_date')
