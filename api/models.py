@@ -102,7 +102,7 @@ class Review(models.Model):
         User, on_delete=models.CASCADE, related_name='reviews'
     )
     pub_date = models.DateTimeField(auto_now_add=True)
-    score = models.IntegerField()
+    score = models.IntegerField(choices=RATING_RANGE)
     text = models.TextField(max_length=5000)
     title = models.ForeignKey(
         Title, on_delete=models.CASCADE, related_name='reviews'
@@ -110,7 +110,6 @@ class Review(models.Model):
 
     class Meta:
         ordering = ('-pub_date',)
-        unique_together = ('author', 'title')
 
     def __str__(self):
         return self.text
