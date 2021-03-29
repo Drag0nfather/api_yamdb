@@ -87,16 +87,16 @@ class User(AbstractUser):
 
 class Review(models.Model):
     RATING_RANGE = (
-        ('1', '1'),
-        ('2', '2'),
-        ('3', '3'),
-        ('4', '4'),
-        ('5', '5'),
-        ('6', '6'),
-        ('7', '7'),
-        ('8', '8'),
-        ('9', '9'),
-        ('10', '10')
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+        (6, 6),
+        (7, 7),
+        (8, 8),
+        (9, 9),
+        (10, 10)
     )
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='reviews'
@@ -110,7 +110,6 @@ class Review(models.Model):
 
     class Meta:
         ordering = ('-pub_date',)
-        unique_together = ('author', 'title')
 
     def __str__(self):
         return self.text
