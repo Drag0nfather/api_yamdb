@@ -1,4 +1,3 @@
-from django.db.models import query
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
@@ -31,8 +30,12 @@ class CategoryField(serializers.SlugRelatedField):
 
 
 class TitleSerializer(serializers.ModelSerializer):
-    genre = GenreField(many=True, slug_field='slug', queryset=Genre.objects.all())
-    category = CategoryField(slug_field='slug', queryset=Category.objects.all())
+    genre = GenreField(
+        many=True, slug_field='slug', queryset=Genre.objects.all()
+    )
+    category = CategoryField(
+        slug_field='slug', queryset=Category.objects.all()
+    )
 
     class Meta:
         fields = '__all__'

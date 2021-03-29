@@ -2,7 +2,7 @@ from django.urls import path, include
 
 from rest_framework.routers import DefaultRouter
 
-from api.views import (
+from .views import (
     TitleViewSet,
     GenresViewSet,
     CategoriesViewSet,
@@ -25,7 +25,7 @@ v1_router.register(
     CommentViewSet,
     basename='comments_api_v1',
 )
-v1_router.register('titles', TitleViewSet, basename='titles')
+v1_router.register('titles', TitleViewSet, basename='titles_api_v1')
 v1_router.register('genres', GenresViewSet)
 v1_router.register('categories', CategoriesViewSet)
 v1_router.register('users', UserViewSet, basename='users')
