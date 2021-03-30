@@ -1,6 +1,7 @@
 from django.contrib.auth.hashers import make_password, check_password
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
+from django.db.models import Avg
 
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework_simplejwt.tokens import AccessToken
@@ -15,6 +16,7 @@ from api.mail import generate_confirm_code, send_mail_func
 from api.permissions import IsAdminPermission, IsAuthorOrStuffOrReadOnly, IsAdminOrReadOnlyPermission
 from api.serializers import (
     TitleSerializer,
+    TitleSerializerWithRating,
     GenreSerializer,
     CategorySerializer,
     UserSerializer,
@@ -89,8 +91,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
-    serializer_class = TitleSerializer
+    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     permission_classes = (IsAdminOrReadOnlyPermission,)
     pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter]
@@ -98,6 +99,11 @@ class TitleViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return TitleSerializerWithRating
+        return TitleSerializer
 
 
 class GenresViewSet(mixins.ListModelMixin,
