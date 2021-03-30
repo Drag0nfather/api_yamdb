@@ -91,7 +91,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
+    queryset = Title.objects.annotate(
+        rating=Avg('reviews__score')
+    ).order_by('id')
     permission_classes = (IsAdminOrReadOnlyPermission,)
     pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter]
@@ -110,7 +112,7 @@ class GenresViewSet(mixins.ListModelMixin,
                     mixins.CreateModelMixin,
                     mixins.DestroyModelMixin,
                     viewsets.GenericViewSet):
-    queryset = Genre.objects.all()
+    queryset = Genre.objects.all().order_by('id')
     serializer_class = GenreSerializer
     permission_classes = (IsAdminOrReadOnlyPermission,)
     pagination_class = PageNumberPagination
@@ -123,7 +125,7 @@ class CategoriesViewSet(mixins.ListModelMixin,
                         mixins.CreateModelMixin,
                         mixins.DestroyModelMixin,
                         viewsets.GenericViewSet):
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().order_by('id')
     serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnlyPermission,)
     pagination_class = PageNumberPagination
