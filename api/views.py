@@ -10,6 +10,7 @@ from rest_framework.permissions import (AllowAny, IsAuthenticated,
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
+from api.filters import TitleFilter
 from api.mail import generate_confirm_code, send_mail_func
 from api.models import Category, Genre, Review, Title, User
 from api.permissions import (IsAdminOrReadOnlyPermission, IsAdminPermission,
@@ -92,7 +93,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnlyPermission,)
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['genre__slug', 'category']
+    filterset_class = TitleFilter
 
     def perform_create(self, serializer):
         serializer.save()
