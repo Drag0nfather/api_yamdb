@@ -8,46 +8,36 @@ class Category(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
 
-    class Meta:
-        verbose_name = 'Categories'
-        verbose_name_plural = 'Categories'
+    def __str__(self):
+        return self.name
 
 
 class Genre(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
 
-    class Meta:
-        verbose_name = 'Genres'
-        verbose_name_plural = 'Genres'
+    def __str__(self):
+        return self.name
 
 
 class Title(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
-        blank=True, null=True,
+        null=True, blank=True,
         related_name='titles',
     )
     genre = models.ManyToManyField(
         Genre,
-        blank=True, null=True,
+        null=True, blank=True,
         related_name='titles',
     )
-    name = models.CharField(
-        max_length=50,
-        verbose_name='Имя',
-        help_text='Имя тайтла',
-    )
-    year = models.IntegerField(
-        verbose_name='Год',
-        help_text='Год выпуска тайтла',
-    )
+    name = models.CharField(max_length=50)
+    year = models.PositiveIntegerField()
     description = models.TextField()
 
-    class Meta:
-        verbose_name = 'Title'
-        verbose_name_plural = 'Title'
+    def __str__(self):
+        return self.name
 
 
 class Roles(models.TextChoices):
@@ -108,9 +98,6 @@ class Review(models.Model):
         Title, on_delete=models.CASCADE, related_name='reviews'
     )
 
-    class Meta:
-        ordering = ('-pub_date',)
-
     def __str__(self):
         return self.text
 
@@ -124,9 +111,6 @@ class Comment(models.Model):
         Review, on_delete=models.CASCADE, related_name='comments'
     )
     text = models.TextField(max_length=500)
-
-    class Meta:
-        ordering = ('-pub_date',)
 
     def __str__(self):
         return self.text

@@ -1,8 +1,7 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from django.contrib.auth import get_user_model
-
-from api.models import Category, Genre, Title, User, Review, Comment
+from api.models import Category, Comment, Genre, Review, Title, User
 
 User = get_user_model()
 
@@ -42,6 +41,20 @@ class TitleSerializer(serializers.ModelSerializer):
         model = Title
 
 
+class TitleSerializerWithRating(serializers.ModelSerializer):
+    genre = GenreField(
+        many=True, slug_field='slug', queryset=Genre.objects.all()
+    )
+    category = CategoryField(
+        slug_field='slug', queryset=Category.objects.all()
+    )
+    rating = serializers.FloatField()
+
+    class Meta:
+        fields = '__all__'
+        model = Title
+
+
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -63,6 +76,14 @@ class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         slug_field='username', read_only=True
     )
+
+    def validate(self, data):
+        user = self.context['request'].user
+        title = self.context['view'].kwargs.get('title_id')
+        if (self.context['request'].method == 'POST'
+           and Review.objects.filter(author=user, title=title).exists()):
+            raise serializers.ValidationError('Вы уже оставили отзыв.')
+        return data
 
     class Meta:
         fields = ('id', 'text', 'author', 'score', 'pub_date')
