@@ -112,7 +112,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+DEFAULT_FROM_EMAIL = 'admin@yamdb.test'
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
 
 AUTH_USER_MODEL = 'api.User'
